@@ -1,0 +1,327 @@
+#usda 1.0
+(
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["Sphere_Left", "Sphere_Right", "GridMaterial", "Material", "MyMaterial", "InverseLerp"]
+    def Sphere "Sphere_Right" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Root/GridMaterial/GridMaterial> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double radius = 0.1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0.5, 1.5, -1.5)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Sphere "Sphere_Left" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Root/GridMaterial/GridMaterial> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double radius = 0.1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (-0.5, 1.5, -1.5)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def "GridMaterial" (
+        active = true
+        references = @Materials/GridMaterial.usda@
+    )
+    {
+        reorder nameChildren = ["GridMaterial", "Material"]
+        float3 xformOp:scale = (1, 1, 1)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        over "GridMaterial"
+        {
+            over "LineColor"
+            {
+                int ui:nodegraph:node:stackingOrder = 1442
+            }
+
+            over "BaseColor"
+            {
+                int ui:nodegraph:node:stackingOrder = 1441
+            }
+
+            over "Remap"
+            {
+                int ui:nodegraph:node:stackingOrder = 1445
+            }
+
+            over "Min"
+            {
+                int ui:nodegraph:node:stackingOrder = 1446
+            }
+
+            over "Separate2"
+            {
+                int ui:nodegraph:node:stackingOrder = 1447
+            }
+        }
+    }
+
+    def Material "Material"
+    {
+        token outputs:mtlx:surface.connect = </Root/Material/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (335.25, 100.5)
+
+        def Shader "PreviewSurface"
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (93.5, 100.5)
+        }
+    }
+
+    def Xform "MyMaterial" (
+        active = true
+    )
+    {
+        reorder nameChildren = ["NodeGraph", "MyMaterial"]
+        def Material "MyMaterial"
+        {
+            reorder nameChildren = ["PreviewSurface", "InverseLerp", "Length", "Position"]
+            float inputs:max = 1 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-691.7344, 75.81641)
+                        int stackingOrderInSubgraph = 226
+                    }
+                }
+            )
+            float inputs:min = 0 (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-753.59766, -1.8125)
+                        int stackingOrderInSubgraph = 310
+                    }
+                }
+            )
+            asset inputs:texture = @gradient.png@ (
+                customData = {
+                    dictionary realitykit = {
+                        float2 positionInSubgraph = (-223.69531, -380.4414)
+                        int stackingOrderInSubgraph = 292
+                    }
+                }
+            )
+            token outputs:mtlx:surface.connect = </Root/MyMaterial/MyMaterial/PreviewSurface.outputs:out>
+            token outputs:realitykit:vertex
+            token outputs:surface.connect = </Root/MyMaterial/MyMaterial/UsdPreviewSurface.outputs:surface>
+            float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (600.35547, 70.35156)
+            int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 162
+
+            def Shader "PreviewSurface" (
+                active = true
+            )
+            {
+                uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+                color3f inputs:diffuseColor = (0.46135616, 0.03517011, 0) (
+                    colorSpace = "srgb_displayp3"
+                )
+                color3f inputs:diffuseColor.connect = </Root/MyMaterial/MyMaterial/Image.outputs:out>
+                float inputs:metallic = 0.5
+                float3 inputs:normal
+                float inputs:opacity
+                float inputs:roughness
+                token outputs:out
+                float2 ui:nodegraph:node:pos = (355.77734, -37.976562)
+                int ui:nodegraph:node:stackingOrder = 273
+            }
+
+            def Shader "Position"
+            {
+                uniform token info:id = "ND_position_vector3"
+                string inputs:space = "object"
+                float3 outputs:out
+                float2 ui:nodegraph:node:pos = (-742.875, -166.9961)
+                int ui:nodegraph:node:stackingOrder = 105
+            }
+
+            def NodeGraph "Length" (
+                active = true
+            )
+            {
+                float3 inputs:Point = (0, 0, 0) (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-556.4414, 80.83203)
+                            int stackingOrderInSubgraph = 4
+                        }
+                    }
+                )
+                float3 inputs:Point.connect = </Root/MyMaterial/MyMaterial/Position.outputs:out>
+                float outputs:Length (
+                    customData = {
+                        dictionary realitykit = {
+                            int stackingOrderInSubgraph = 13
+                        }
+                    }
+                )
+                float outputs:Length.connect = </Root/MyMaterial/MyMaterial/Length/SquareRoot.outputs:out>
+                float2 ui:nodegraph:node:pos = (-446.5547, -125.88281)
+                int ui:nodegraph:node:stackingOrder = 115
+                float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (81.53906, 50.45703)
+                int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 15
+
+                def Shader "DotProduct"
+                {
+                    uniform token info:id = "ND_dotproduct_vector3"
+                    float3 inputs:in1.connect = </Root/MyMaterial/MyMaterial/Length.inputs:Point>
+                    float3 inputs:in2.connect = </Root/MyMaterial/MyMaterial/Length.inputs:Point>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (-322.33984, 75.52734)
+                    int ui:nodegraph:node:stackingOrder = 9
+                }
+
+                def Shader "SquareRoot"
+                {
+                    uniform token info:id = "ND_sqrt_float"
+                    float inputs:in.connect = </Root/MyMaterial/MyMaterial/Length/DotProduct.outputs:out>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (-111.74609, 68.60547)
+                    int ui:nodegraph:node:stackingOrder = 13
+                }
+            }
+
+            def NodeGraph "InverseLerp" (
+                active = true
+            )
+            {
+                float inputs:max = 0 (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-479.6172, -43.25)
+                            int stackingOrderInSubgraph = 2
+                        }
+                    }
+                )
+                float inputs:max.connect = </Root/MyMaterial/MyMaterial.inputs:max>
+                float inputs:min = 0 (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-486.5664, 41.304688)
+                            int stackingOrderInSubgraph = 48
+                        }
+                    }
+                )
+                float inputs:min.connect = </Root/MyMaterial/MyMaterial.inputs:min>
+                float inputs:value = 0 (
+                    customData = {
+                        dictionary realitykit = {
+                            float2 positionInSubgraph = (-483.91016, 125.28906)
+                            int stackingOrderInSubgraph = 51
+                        }
+                    }
+                )
+                float inputs:value.connect = </Root/MyMaterial/MyMaterial/Length.outputs:Length>
+                float outputs:value (
+                    customData = {
+                        dictionary realitykit = {
+                            int stackingOrderInSubgraph = 43
+                        }
+                    }
+                )
+                float outputs:value.connect = </Root/MyMaterial/MyMaterial/InverseLerp/Divide.outputs:out>
+                float2 ui:nodegraph:node:pos = (-198.48438, 91.1875)
+                int ui:nodegraph:node:stackingOrder = 256
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["outputs:value"]
+                float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (150.84766, -15.175781)
+                int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 42
+
+                def Shader "Subtract"
+                {
+                    uniform token info:id = "ND_subtract_float"
+                    float inputs:in1.connect = </Root/MyMaterial/MyMaterial/InverseLerp.inputs:value>
+                    float inputs:in2.connect = </Root/MyMaterial/MyMaterial/InverseLerp.inputs:min>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (-250.64453, 29.488281)
+                    int ui:nodegraph:node:stackingOrder = 49
+                }
+
+                def Shader "Subtract_1"
+                {
+                    uniform token info:id = "ND_subtract_float"
+                    float inputs:in1.connect = </Root/MyMaterial/MyMaterial/InverseLerp.inputs:max>
+                    float inputs:in2.connect = </Root/MyMaterial/MyMaterial/InverseLerp.inputs:min>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (-232.83594, -53.625)
+                    int ui:nodegraph:node:stackingOrder = 52
+                }
+
+                def Shader "Divide"
+                {
+                    uniform token info:id = "ND_divide_float"
+                    float inputs:in1.connect = </Root/MyMaterial/MyMaterial/InverseLerp/Subtract.outputs:out>
+                    float inputs:in2.connect = </Root/MyMaterial/MyMaterial/InverseLerp/Subtract_1.outputs:out>
+                    float outputs:out
+                    float2 ui:nodegraph:node:pos = (-79.09766, -14.8046875)
+                    int ui:nodegraph:node:stackingOrder = 44
+                    string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["outputs:out"]
+                }
+            }
+
+            def Shader "Combine3"
+            {
+                uniform token info:id = "ND_combine3_color3"
+                float inputs:in1.connect = </Root/MyMaterial/MyMaterial/InverseLerp.outputs:value>
+                float inputs:in2.connect = </Root/MyMaterial/MyMaterial/InverseLerp.outputs:value>
+                float inputs:in3.connect = </Root/MyMaterial/MyMaterial/InverseLerp.outputs:value>
+                color3f outputs:out
+                float2 ui:nodegraph:node:pos = (89.390625, 99.47656)
+                int ui:nodegraph:node:stackingOrder = 190
+            }
+
+            def Shader "UsdPreviewSurface" (
+                active = false
+            )
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                token outputs:surface
+            }
+
+            def Shader "Combine2"
+            {
+                uniform token info:id = "ND_combine2_vector2"
+                float inputs:in1.connect = </Root/MyMaterial/MyMaterial/InverseLerp.outputs:value>
+                float inputs:in2.connect = None
+                float2 outputs:out
+                float2 ui:nodegraph:node:pos = (-69.473946, -191.23712)
+                int ui:nodegraph:node:stackingOrder = 315
+            }
+
+            def Shader "Image"
+            {
+                uniform token info:id = "ND_image_color3"
+                color3f inputs:default
+                prepend asset inputs:file.connect = </Root/MyMaterial/MyMaterial.inputs:texture>
+                string inputs:filtertype
+                float2 inputs:texcoord.connect = </Root/MyMaterial/MyMaterial/Combine2.outputs:out>
+                string inputs:uaddressmode = "clamp"
+                string inputs:vaddressmode = "clamp"
+                color3f outputs:out
+                float2 ui:nodegraph:node:pos = (116.57296, -282.72113)
+                int ui:nodegraph:node:stackingOrder = 309
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:texcoord", "inputs:uaddressmode"]
+            }
+        }
+    }
+}
+
