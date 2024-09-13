@@ -1,1 +1,1 @@
-# procedural-planet-reality-kit
+# Procedural Planets in Reality Kit
